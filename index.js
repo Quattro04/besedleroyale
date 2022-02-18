@@ -12,6 +12,8 @@ const allWords = ["sanje","letev","kučan","matoz","janša","aaajs","aasss","aba
 let users = {}
 let games = {}
 
+app.use('/favicon.ico', express.static('images/favicon.ico'));
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 })
