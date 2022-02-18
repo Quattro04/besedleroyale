@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
             status: "lobby"
         }
         games[gameCode] = game
+        console.log('New game - now ', Object.keys(games).length)
         socket.emit('lobby-start', { gameCode })
     })
 
@@ -147,6 +148,7 @@ io.on('connection', (socket) => {
                     users[user].emit('game-end')
                 })
                 delete games[code];
+                console.log('Deleted game - now ', Object.keys(games).length)
                 return
             }
             // User is a player
@@ -154,7 +156,7 @@ io.on('connection', (socket) => {
                 games[code].users.splice(games[code].users.indexOf(socket.id), 1)
                 if (games[code].status === 'lobby') {
                     games[code].users.forEach(user => {
-                        users[user].emit('user-left', { users: games[code].users.length + 1 })
+                        users[user].emit('user-left', { users: games[code].users.length })
                     })
                 }
             }
@@ -162,6 +164,6 @@ io.on('connection', (socket) => {
     });
 })
 
-server.listen(process.env.PORT || 5000, () => {
+server.listen(process.env.PORT || 3000, () => {
   console.log('Server listening on: 3000')
 })

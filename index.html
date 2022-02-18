@@ -15,6 +15,9 @@
         html {
             height: 100%;
         }
+        html * {
+            overflow: hidden;
+        }
         body {
             height: 100%;
             margin: 0;
@@ -23,7 +26,10 @@
             overflow: hidden;
         }
         .header {
+            display: flex;
+            justify-content: center;
             padding: 10px 0;
+            align-items: center;
         }
         .logo {
             color: white;
@@ -31,15 +37,28 @@
             font-size: 1.5rem;
             padding-top: 3px;
         }
+        .header .coffee-link {
+            position: absolute;
+            right: 30px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            background-color: #ff621e;
+            text-decoration: none;
+            border-radius: 50%;
+        }
+        .header .coffee-link i {
+            color: white;
+            font-size: 20px;
+        }
         .main {
             width: 100vw;
             height: 100%;
             display: flex;
             flex-direction: column;
-        }
-        .header {
-            display: flex;
-            justify-content: center;
         }
         .content {
             flex: 1 1 0;
@@ -84,10 +103,29 @@
         }
         .intro {
             width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+        .intro .social {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #4b4b4b;
+            color: white;
+            margin-top: auto;
+            padding: 10px;
+        }
+        .intro .social a {
+            display: flex;
+            padding-bottom: 3px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #4267B2;
+            margin-left: 5px;
         }
         .btn {
             width: 100%;
@@ -104,6 +142,7 @@
             line-height: 1;
         }
         .btn.new-game {
+            margin-top: auto;
             margin-bottom: 20px;
         }
         .game-lobby {
@@ -119,11 +158,22 @@
             flex-direction: column;
             padding: 10px 20px;
             border: 2px solid dodgerblue;
+            margin-top: auto;
         }
         .game-lobby .code-container .code {
             letter-spacing: 2px;
             font-size: 24px;
             font-weight: 600;
+        }
+        .game-lobby .instructions {
+            padding: 20px;
+            text-align: center;
+        }
+        .game-lobby .players {
+            font-size: 20px;
+        }
+        .game-lobby .start-game {
+            margin: auto 0;
         }
         .game {
             width: 100%;
@@ -267,7 +317,7 @@
         .keyboard {
             width: 100%;
             max-width: 500px;
-            flex: 0 0 150px;
+            flex: 0 0 200px;
             display: flex;
             flex-direction: column;
             margin: 0 auto;
@@ -329,26 +379,32 @@
     <div class="main">
         <div class="header">
             <h1 class="logo">Besedle Royale</h1>
+            <a class="coffee-link" href="https://www.buymeacoffee.com/besedleroyale"><i class="material-icons">coffee</i></a>
         </div>
         <div class="content">
             <div class="display-message"></div>
             <div class="end-popup-container">
                 <div class="end-popup">
                     <span class="message"></span>
-                    <button class="btn" onclick="window.location.reload()">DOMOV</button>
+                    <button class="btn" onclick="window.location.reload()">Domov</button>
                 </div>
             </div>
             <div class="intro">
-                <button class="btn new-game" onclick="startLobby()">NOVA IGRA</button>
-                <button class="btn join-game" onclick="joinLobby()">PRIDRUŽI SE</button>
+                <button class="btn new-game" onclick="startLobby()">Nova Igra</button>
+                <button class="btn join-game" onclick="joinLobby()">Pridruži se</button>
+                <div class="social">
+                    <span>© 2022 - Matija Jeras -</span>
+                    <a href="https://www.facebook.com/matija.jeras01"><i class="material-icons">facebook</i></a>
+                </div>
             </div>
             <div class="game-lobby">
                 <div class="code-container">
                     <span>Koda:</span>
                     <span class="code"></span>
                 </div>
+                <p class="instructions">Kodo zaupajte prijateljem, ki se lahko potem pridružijo vaši igri z gumbom "Pridruži se" na začetni strani.</p>
                 <div class="players">Število igralcev: <span class="number">1</span></div>
-                <button class="btn" onclick="startGame()">ZAČNI</button>
+                <button class="btn start-game" onclick="startGame()">Začni</button>
             </div>
             <div class="game">
                 <div class="board">
@@ -469,11 +525,13 @@
         let letterToIndexMapping = {e:0,r:1,t:2,z:3,u:4,i:5,o:6,p:7,š:8,ž:9,a:10,s:11,d:12,f:13,g:14,h:15,j:16,k:17,l:18,č:19,c:20,v:21,b:22,n:23,m:24}
 
         function startLobby() {
+            $('.coffee-link').hide()
             socket.emit('start-lobby')
         }
 
         function joinLobby() {
             $('.intro').hide()
+            $('.coffee-link').hide()
             $('.game .join-game-code').show()
             $('.game .board .row-1').hide()
             $('.game .board .row-2').hide()
@@ -614,7 +672,6 @@
             gameCode = data.gameCode
             $('.intro').hide()
             $('.game-lobby .code').text(gameCode)
-            $('.game-lobby .btn').show()
             $('.game-lobby').css('display', 'flex')
             onScreen = 'lobby'
         });
@@ -629,7 +686,7 @@
             $('.game .board .row-5').css('display', 'flex')
             $('.game').hide()
             $('.game-lobby .code').text(gameCode)
-            $('.game-lobby .btn').hide()
+            $('.game-lobby .btn').css('visibility','hidden')
             $('.game-lobby').css('display', 'flex')
             onScreen = 'lobby'
         });
